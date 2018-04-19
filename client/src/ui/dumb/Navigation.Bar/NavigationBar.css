@@ -1,0 +1,26 @@
+.navbar {
+	margin-bottom: 0px;
+}
+.navbar-right li a {
+	padding-top: 13px;
+	padding-bottom: 13px;
+}
+
+.navbar-right li.userAvatarLi a {
+	padding-top: 7px;
+	padding-bottom: 7px;
+}
+
+.navbar-right li.dropdown {
+	height: 50px;
+}
+
+.navbar-right li.dropdown a {
+	height: 50px;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+.navbar-right ul.dropdown-menu {
+	width: 250px;
+}

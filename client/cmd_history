@@ -1,0 +1,38 @@
+  953  cd MeteorApps/gdeedem.com/0.5.0/site/
+  954  meteor --port 3020 --settings settings-development.json 
+  955  history 
+  956  cd /media/none/FC39-7026/gde/site/
+  957  ls
+  958  meteor --port 3020 --settings settings-development.json
+  959  cd
+  960  ls
+  961  mc
+  962  sudo mc
+  963  ls
+  964  cd MarkersApp/client/
+  965  yarn add redux redux-thunk
+  966  yarn add recompose
+  967  yarn add react-redux
+  968  yarn add react-router-dom
+  969  yarn add axios
+  970  yarn add apollo-client
+  971  yarn add graphql graphql-tag graphql-tools
+  972  yarn add history
+  973  yarn add react-apollo
+  974  yarn add prop-types
+  975  yarn add react-bootstrap
+  976  yarn add lodash
+  977  yarn add react-router-bootstrap
+  978  yarn add auth0-js auth0-lock jsonwebtoken
+  979  yarn add react-google-maps
+  980  yarn add --dev eslint babel-eslint eslint-plugin-import eslint-plugin-react eslint-plugin-jsx-a11y
+  981  yarn add --dev prettier-eslint
+  982  yarn add --dev @meteorjs/eslint-config-meteor eslint-plugin-meteor
+  983  yarn add --dev eslint-config-airbnb eslint-import-resolver-meteor
+  984  yarn add meteor
+  985  yarn add moment
+  986  yarn add apollo-cache-inmemory apollo-link apollo-link-http
+  987  history > cmd_history
+
+
+yarn start

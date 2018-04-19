@@ -1,0 +1,23 @@
+
+  961  cd MarkersApp/server/
+  962  ls
+  963  npm init
+  964  yarn add --dev babel-cli babel-preset-latest babel-preset-stage-2
+  965  yarn add --dev babel-preset-env
+  966  code .
+  967  npm i -g eslint
+  968  sudo npm i -g eslint
+  969  eslint --init
+  970  (   export PKG=eslint-config-airbnb-base;   npm info "$PKG@latest" peerDependencies --json | command sed 's/[\{\},]//g ; s/: /@/g' | xargs npm install --save-dev "$PKG@latest"; )
+  971  yarn add --dev nodemon
+  972  yarn add express body-parser apollo-server-express
+  973  yarn add cors
+  974  yarn add prettier-eslint
+  975  yarn --help
+  976  yarn remove prettier-eslint
+  977  yarn add --dev prettier-eslint
+  978  yarn add graphql-tools
+  979  yarn add mongoose graphql
+  980  yarn start
+  981  history 
+  982  history > cmd_history
