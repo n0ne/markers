@@ -11,14 +11,14 @@ export default {
 		},
 
 		markers: async (_, args, { Marker, user }) => {
-			console.log(args)
+			// console.log(args)
 
-			console.log('call markers resolver')
+			// console.log('call markers resolver')
 
 			const { NELat, NELng, SWLat, SWLng } = args
 
 			const markers = await Marker.find({ location: { $geoWithin: { $box: [[SWLng, SWLat], [NELng, NELat]] } } })
-			console.log(markers.length)
+			// console.log(markers.length)
 
 			return markers.map(marker => {
 				marker._id = marker._id.toString()
@@ -126,7 +126,7 @@ export default {
 			return cat
 		},
 		createMarker: async (_, { lat, lng }, { Marker }) => {
-			console.log('Try to create marker')
+			// console.log('Try to create marker')
 
 			const marker = {
 				location: {
@@ -161,7 +161,7 @@ export default {
 			return markers
 		},
 		upsertUser: async (_, args, { user, User }) => {
-			console.log('Try to upsert user!')
+			// console.log('Try to upsert user!')
 
 			// console.log(user)
 
