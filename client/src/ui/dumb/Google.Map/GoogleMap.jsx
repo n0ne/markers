@@ -52,17 +52,22 @@ const GMap = compose(
 					// 	this.props.center.lat !== refs.map.getCenter().lat() ||
 					// 	this.props.center.lng !== refs.map.getCenter().lng()
 					// ) {
-					// 	this.props.setCenter({
-					// 		lat: refs.map.getCenter().lat(),
-					// 		lng: refs.map.getCenter().lng(),
-					// 	})
+					// this.props.setCenter({
+					// 	lat: refs.map.getCenter().lat(),
+					// 	lng: refs.map.getCenter().lng(),
+					// })
 					// }
 
 					if (this.props.onIdle) {
-						console.log('Call mapIdle()')
+						// console.log('Call mapIdle()')
 
 						this.props.onIdle(refs.map.getBounds())
 					}
+
+					this.props.setCenter({
+						lat: refs.map.getCenter().lat(),
+						lng: refs.map.getCenter().lng(),
+					})
 				},
 				onDoubleClick: event => {
 					const loc = this.props.location.pathname.split('/')
@@ -82,7 +87,7 @@ const GMap = compose(
 						// 	lng: event.latLng.lng(),
 						// })
 					} else {
-						this.props.history.push(`/freights/search/${event.latLng.lat()},${event.latLng.lng()}/r10000`)
+						// this.props.history.push(`/freights/search/${event.latLng.lat()},${event.latLng.lng()}/r10000`)
 					}
 				},
 				onClucterClick: cluster => {
@@ -167,7 +172,7 @@ const GMap = compose(
 						}}
 						key={marker._id}
 						_id={marker._id}
-						icon={`/default.png`}
+						icon={`/${props.pic}.png`}
 						option={{ id: marker._id }}
 					/>
 				))}

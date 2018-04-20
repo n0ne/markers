@@ -3,7 +3,10 @@ import React, { Component } from 'react'
 
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { Row, Col } from 'react-bootstrap'
+
+import { capitalize } from 'lodash'
 
 import reactCSS from 'reactcss'
 
@@ -28,6 +31,14 @@ class Extra extends Component {
 				},
 			},
 		})
+		const links = ['schools', 'gas', 'pharmacies', 'restaurants']
+
+		// console.log(this.props)
+
+		const loc = this.props.location.pathname.split('/')
+		if (loc.length === 2) {
+			loc[2] = 'schools'
+		}
 
 		return (
 			<div
@@ -36,13 +47,17 @@ class Extra extends Component {
 					this.myDiv = div
 				}}
 			>
-				<BoxHeader title="Markers" />
+				<BoxHeader title="Extra Markers" />
 				<BoxContainer>
-					<div>Test Extra</div>
-					<div>Test Extra</div>
-					<div>Test Extra</div>
-					<div>Test Extra</div>
-					<div>Test Extra</div>
+					{links.map(link => {
+						return (
+							<Row>
+								<Col xs={12}>
+									{link === loc[2] ? capitalize(link) : <Link to={`/extra/${link}`}>{capitalize(link)}</Link>}
+								</Col>
+							</Row>
+						)
+					})}
 				</BoxContainer>
 			</div>
 		)

@@ -42,7 +42,7 @@ class MainContainer extends Component {
 	}
 
 	componentDidMount() {
-		console.log(this.props)
+		// console.log(this.props)
 
 		if (moment(new Date().setTime(localStorage.getItem('expiresAt'))).isBefore(new Date())) {
 			// console.log('Expired')
@@ -66,14 +66,14 @@ class MainContainer extends Component {
 		})
 
 		this.lock.on('authenticated', authResult => {
-			console.log(authResult)
+			// console.log(authResult)
 
 			this.lock.getUserInfo(authResult.accessToken, async (error, profile) => {
 				if (error) {
 					console.log(error)
 					return
 				}
-				console.log(profile)
+				// console.log(profile)
 
 				let expiresAt = JSON.stringify(authResult.expiresIn * 1000 + new Date().getTime())
 
@@ -82,12 +82,12 @@ class MainContainer extends Component {
 				localStorage.setItem('idToken', authResult.idToken)
 				// localStorage.setItem('profile', JSON.stringify(profile))
 
-				console.log(this.props)
+				// console.log(this.props)
 
 				this.props
 					.mutate()
 					.then(({ data }) => {
-						console.log('got data', data)
+						// console.log('got data', data)
 						this.props.data.refetch()
 					})
 					.catch(error => {
@@ -112,7 +112,7 @@ class MainContainer extends Component {
 	}
 
 	handleLogout = () => {
-		console.log('Main logout function')
+		// console.log('Main logout function')
 
 		// if (this.lock) {
 		//   this.lock.logout()

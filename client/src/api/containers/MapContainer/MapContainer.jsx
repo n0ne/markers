@@ -10,22 +10,26 @@ import reactCSS from 'reactcss'
 import GMap from '../../../ui/dumb/Google.Map/GoogleMap'
 import MarkersIndex from '../../../ui/components/Markers.Index/MarkersIndex'
 import Extra from '../../../ui/components/Extra/Extra'
+import Profile from '../Profile/Profile'
 
 import { MARKERS_QUERY, MARKERS_EXTRA_QUERY } from '../../graphql/markers/markers.queries'
 import { CREATE_MARKER_MUTATION } from '../../graphql/markers/markers.mutations'
 import { setBounds } from '../../actions/map'
+import PrivateRoute from '../../routes/PrivateRoute'
 
 const markers = graphql(MARKERS_QUERY, {
 	options: ({ NELat, NELng, SWLat, SWLng }) => {
+		// console.log(NELng)
+
 		return {
 			variables: { NELat, NELng, SWLat, SWLng },
-			pollInterval: 60000,
+			// pollInterval: 60000,
 		}
 	},
 	skip: ({ location }) => {
 		const loc = location.pathname.split('/')
 
-		console.log(loc)
+		// console.log(loc)
 
 		// if (loc[1] && loc[1] === 'extra') {
 		// 	return true
@@ -37,10 +41,18 @@ const markers = graphql(MARKERS_QUERY, {
 })
 
 const markersExtra = graphql(MARKERS_EXTRA_QUERY, {
-	options: ({ NELat, NELng, SWLat, SWLng }) => {
+	options: ({ NELat, NELng, SWLat, SWLng, location }) => {
+		// console.log(NELng)
+		const loc = location.pathname.split('/')
+		let query = ''
+		if (loc.length !== 2) {
+			query = loc[2]
+		} else {
+			query = 'schools'
+		}
 		return {
-			variables: { NELat, NELng, SWLat, SWLng },
-			pollInterval: 60000,
+			variables: { NELat, NELng, SWLat, SWLng, query },
+			// pollInterval: 60000,
 		}
 	},
 	skip: ({ location }) => {
@@ -59,7 +71,7 @@ const createMarker = graphql(CREATE_MARKER_MUTATION, {
 	props: ({ ownProps, mutate }) => ({
 		create: ({ lat, lng }) => {
 			// console.log(values)
-			console.log(lat, lng)
+			// console.log(lat, lng)
 
 			mutate({
 				variables: { lat: lat, lng: lng },
@@ -98,7 +110,7 @@ class MapContainer extends Component {
 	markerClick = marker => {}
 
 	onIdle = bounds => {
-		console.log('Call onIdle')
+		// console.log('Call onIdle')
 		const NELat = bounds.getNorthEast().lat()
 		const NELng = bounds.getNorthEast().lng()
 		const SWLat = bounds.getSouthWest().lat()
@@ -113,7 +125,8 @@ class MapContainer extends Component {
 	}
 
 	render() {
-		const { data } = this.props
+		const { data, location } = this.props
+		let image = 'default'
 		const styles = reactCSS({
 			default: {
 				mapMontainer: {
@@ -123,15 +136,36 @@ class MapContainer extends Component {
 				},
 			},
 		})
-		console.log(this.props)
-		const markers = data && data.markers
+		// console.log(this.props)
+		const markers = (data && data.markersExtra) || (data && data.markers)
+		const loc = location.pathname.split('/')
+		// console.log(loc)
+		// console.log(loc.length)
+
+		if (loc.length === 2 && loc[1] === 'extra') {
+			image = 'schools'
+		} else {
+			image = loc[2]
+		}
+		if (loc.length === 2 && loc[1] === '') {
+			image = 'default'
+		}
+
+		// console.log(image)
 
 		return (
 			<div style={styles.mapMontainer}>
 				<Fragment>
-					<GMap markers={markers} dblClick={this.dblClick} markerClick={this.markerClick} onIdle={this.onIdle} />
+					<GMap
+						markers={markers}
+						dblClick={this.dblClick}
+						markerClick={this.markerClick}
+						onIdle={this.onIdle}
+						pic={image}
+					/>
 					<Switch>
 						<Route path="/extra" component={Extra} />
+						<PrivateRoute path="/profile" component={Profile} />
 						<Route path="/" exact strict component={MarkersIndex} />
 					</Switch>
 				</Fragment>
@@ -173,7 +207,6 @@ export default compose(
 		NELng: 39,
 		SWLat: 46,
 		SWLng: 24,
-		section: 'freights',
 		markers: [],
 	}),
 	withApollo,

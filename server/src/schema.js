@@ -27,8 +27,8 @@ type User {
 
 type Query {
   allCats: [Cat!]!
-  markers: [Marker]!
-  markersExtra: [Marker]!
+  markers(NELat: Float!, NELng: Float!, SWLat: Float!, SWLng: Float!): [Marker]!
+  markersExtra(NELat: Float!, NELng: Float!, SWLat: Float!, SWLng: Float!, query: String!): [Marker]!
   me: User
 }
 

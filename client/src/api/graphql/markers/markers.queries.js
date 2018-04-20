@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 export const MARKERS_QUERY = gql`
-	query markersQuery {
-		markers {
+	query markersQuery($NELat: Float!, $NELng: Float!, $SWLat: Float!, $SWLng: Float!) {
+		markers(NELat: $NELat, NELng: $NELng, SWLat: $SWLat, SWLng: $SWLng) {
 			_id
 			location {
 				type
@@ -13,11 +13,10 @@ export const MARKERS_QUERY = gql`
 `
 
 export const MARKERS_EXTRA_QUERY = gql`
-	query markersExtraQuery {
-		markersExtra {
+	query markersExtraQuery($NELat: Float!, $NELng: Float!, $SWLat: Float!, $SWLng: Float!, $query: String!) {
+		markersExtra(NELat: $NELat, NELng: $NELng, SWLat: $SWLat, SWLng: $SWLng, query: $query) {
 			_id
 			location {
-				type
 				coordinates
 			}
 		}

@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export default {
 	Query: {
 		allCats: async (_, args, { Cat }) => {
@@ -9,18 +11,32 @@ export default {
 		},
 
 		markers: async (_, args, { Marker, user }) => {
-			// console.log(user)
+			console.log(args)
 
 			console.log('call markers resolver')
 
-			const markers = await Marker.find()
+			const { NELat, NELng, SWLat, SWLng } = args
+
+			const markers = await Marker.find({ location: { $geoWithin: { $box: [[SWLng, SWLat], [NELng, NELat]] } } })
+			console.log(markers.length)
+
 			return markers.map(marker => {
 				marker._id = marker._id.toString()
 				return marker
 			})
 		},
 		markersExtra: async (_, args, { Marker, user }) => {
-			// console.log(user)
+			// console.log(args)
+			const { NELat, NELng, SWLat, SWLng, query, reqion } = args
+			let markers = []
+
+			const queries = {
+				schools: 'школа',
+				gas: 'заправка',
+				pharmacies: 'аптека',
+				restaurants: 'ресторан',
+			}
+			// console.log(queries[query])
 
 			// console.log('call markers resolver')
 
@@ -29,8 +45,59 @@ export default {
 			// 	marker._id = marker._id.toString()
 			// 	return marker
 			// })
+			// https://catalog.api.2gis.ru/3.0/items?viewpoint1=30.230254980468747%2C46.49697467409132&viewpoint2=31.202545019531247%2C46.44921284688416&page=1&q=%D1%88%D0%BA%D0%BE%D0%BB%D0%B0&region_id=14&type=street%2Cbranch%2Cstation&fields=items.point&typekey=rutnpt3272
+			// const url = `https://catalog.api.2gis.ru/3.0/items?viewpoint1=${SWLng}%2${SWLat}&viewpoint2=${NELng}%2C${NELat}&page=1&q=${encodeURIComponent(
+			// 	queries[query]
+			// )}&region_id=14&type=street%2Cbranch%2Cstation&fields=items.point&typekey=rutnpt3272`
 
-			return []
+			const url = `https://catalog.api.2gis.ru/3.0/items?viewpoint1=${SWLng}%2C${NELat}&viewpoint2=${NELng}%2C${SWLat}&page=1&page_size=50&q=${encodeURIComponent(
+				queries[query]
+			)}&region_id=14&type=street%2Cbranch%2Cstation&fields=items.point&key=rutnpt3272`
+			// const url = `https://catalog.api.2gis.ru/3.0/items`
+			markers = await axios
+				.get(url)
+				.then(response => {
+					// console.log(response)
+					// console.log(response.data.result.items)
+					// console.log(response.data.result.items.length)
+
+					return response.data.result.items.map(item => {
+						// console.log(item.point.lon)
+
+						return {
+							_id: item.id,
+							location: {
+								type: 'Point',
+								coordinates: [item.point.lon, item.point.lat],
+							},
+						}
+					})
+				})
+				.catch(error => {
+					console.warn(error)
+				})
+			// axios
+			// 	.get(url, {
+			// 		params: {
+			// 			viewpoint1: `${SWLng}%2C${NELat}`,
+			// 			viewpoint2: `${NELng}%2C${SWLat}`,
+			// 			page: 1,
+			// 			q: encodeURIComponent(queries[query]),
+			// 			region_id: 14,
+			// 			type: 'street%2Cbranch%2Cstation',
+			// 			fields: 'items.point',
+			// 			key: 'rutnpt3272',
+			// 		},
+			// 	})
+			// 	.then(response => {
+			// 		console.log(response)
+			// 	})
+			// 	.catch(error => {
+			// 		console.warn(error)
+			// 	})
+			// console.log(markers[0])
+
+			return markers
 		},
 
 		me: async (_, args, { user, User }) => {
@@ -172,3 +239,25 @@ export default {
 //           data
 //             }
 //         })
+
+//&q=%D1%88%D0%BA%D0%BE%D0%BB%D0%B0&region_id=14&type=street%2Cbranch%2Cstation&fields=items.point&key=rutnpt3272`
+// axios
+// 				.get(url, {
+// 					params: {
+// 						viewpoint1: `${SWLng}%2C${NELat}`,
+// 						viewpoint2: `${NELng}%2C${SWLat}`,
+// 						page: 1,
+// 						q: encodeURIComponent(queries[query]),
+// 						region_id: 14,
+// 						type: encodeURIComponent('street,branch,station'),
+// 						fields: 'items.point',
+// 						key: 'rutnpt3272'
+
+// 					},
+// 				})
+// 				.then(response => {
+// 					console.log(response.data.result)
+// 				})
+// 				.catch(error => {
+// 					console.warn(error)
+// 				})
