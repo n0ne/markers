@@ -7,8 +7,6 @@ import { capitalize } from 'lodash'
 
 class HeaderLink extends Component {
 	render() {
-		// let url = ''
-		// let title = ''
 		let background = '#f8f8f8'
 
 		const { section, location, to } = this.props

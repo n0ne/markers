@@ -13,8 +13,15 @@ export const MARKERS_QUERY = gql`
 `
 
 export const MARKERS_EXTRA_QUERY = gql`
-	query markersExtraQuery($NELat: Float!, $NELng: Float!, $SWLat: Float!, $SWLng: Float!, $query: String!) {
-		markersExtra(NELat: $NELat, NELng: $NELng, SWLat: $SWLat, SWLng: $SWLng, query: $query) {
+	query markersExtraQuery(
+		$NELat: Float!
+		$NELng: Float!
+		$SWLat: Float!
+		$SWLng: Float!
+		$query: String!
+		$regionId: Int!
+	) {
+		markersExtra(NELat: $NELat, NELng: $NELng, SWLat: $SWLat, SWLng: $SWLng, query: $query, regionId: $regionId) {
 			_id
 			location {
 				coordinates
@@ -22,15 +29,3 @@ export const MARKERS_EXTRA_QUERY = gql`
 		}
 	}
 `
-
-// export const MARKERS_QUERY = gql`
-// 	query markersQuery($section: String!, $NELat: Int!, $NELng: Int!, $SWLat: Int!, $SWLng: Int!) {
-// 		markers(section: $section, NELat: $NELat, NELng: $NELng, SWLat: $SWLat, SWLng: $SWLng) {
-// 			_id
-// 			location {
-// 				type
-// 				coordinates
-// 			}
-// 		}
-// 	}
-// `

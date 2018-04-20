@@ -1,7 +1,7 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import { Navbar, Nav } from 'react-bootstrap'
-// import { Link } from 'react-router-dom'
 
 import HeaderLink from '../../components/Header.Link/HeaderLink'
 import UserManagement from '../../components/User.Management/UserManagement'
@@ -13,7 +13,7 @@ const NavigationBar = ({ user, login, logout }) => {
 		<Navbar collapseOnSelect>
 			<Navbar.Header>
 				<Navbar.Brand>
-					<a>Curriculum Vitae</a>
+					<a>Test Markers App</a>
 				</Navbar.Brand>
 				<Navbar.Toggle />
 			</Navbar.Header>
@@ -28,6 +28,12 @@ const NavigationBar = ({ user, login, logout }) => {
 			</Navbar.Collapse>
 		</Navbar>
 	)
+}
+
+NavigationBar.propTypes = {
+	user: PropTypes.object,
+	login: PropTypes.func.isRequired,
+	logout: PropTypes.func.isRequired,
 }
 
 export default NavigationBar

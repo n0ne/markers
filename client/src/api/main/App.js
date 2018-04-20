@@ -1,5 +1,4 @@
 import React from 'react'
-// import ApolloClient from 'apollo-boost'
 
 import moment from 'moment'
 
@@ -36,7 +35,6 @@ const middlewareLink = new ApolloLink((operation, forward) => {
 		token = localStorage.getItem('idToken')
 	}
 
-	// const token = localStorage.getItem('idToken')
 	const authorizationHeader = token ? `Bearer ${token}` : null
 	operation.setContext({
 		headers: {
@@ -48,21 +46,12 @@ const middlewareLink = new ApolloLink((operation, forward) => {
 
 const cache = new InMemoryCache()
 
-const link = ApolloLink.from([
-	middlewareLink,
-	httpLink,
-	// errorLink
-])
+const link = ApolloLink.from([middlewareLink, httpLink])
 
 const client = new ApolloClient({
 	link,
 	cache,
 })
-
-// Pass your GraphQL endpoint to uri
-// const client = new ApolloClient({
-// 	uri: 'http://192.168.55.200:3022/graphql',
-// })
 
 const App = () => (
 	<ApolloProvider client={client}>

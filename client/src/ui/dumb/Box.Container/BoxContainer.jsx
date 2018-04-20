@@ -14,7 +14,7 @@ const BoxContainer = props => {
 				borderTop: 'none',
 				padding: '8px 10px 0px 15px',
 				width: '100%',
-				minHeight: '40vh',
+				minHeight: '30vh',
 				paddingTop: '8px',
 				fontSize: '18px',
 				paddingLeft: '15px',
@@ -28,7 +28,7 @@ const BoxContainer = props => {
 }
 
 BoxContainer.propTypes = {
-	children: PropTypes.object,
+	children: PropTypes.any,
 }
 
 export default compose(pure)(BoxContainer)

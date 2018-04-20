@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
-import { Query } from 'react-apollo'
+import PropTypes from 'prop-types'
+
 import { graphql, withApollo } from 'react-apollo'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import { compose, pure, defaultProps } from 'recompose'
@@ -14,35 +15,24 @@ import Profile from '../Profile/Profile'
 
 import { MARKERS_QUERY, MARKERS_EXTRA_QUERY } from '../../graphql/markers/markers.queries'
 import { CREATE_MARKER_MUTATION } from '../../graphql/markers/markers.mutations'
-import { setBounds } from '../../actions/map'
+import { setBounds, addMarker } from '../../actions/map'
 import PrivateRoute from '../../routes/PrivateRoute'
 
 const markers = graphql(MARKERS_QUERY, {
 	options: ({ NELat, NELng, SWLat, SWLng }) => {
-		// console.log(NELng)
-
 		return {
 			variables: { NELat, NELng, SWLat, SWLng },
-			// pollInterval: 60000,
 		}
 	},
 	skip: ({ location }) => {
 		const loc = location.pathname.split('/')
 
-		// console.log(loc)
-
-		// if (loc[1] && loc[1] === 'extra') {
-		// 	return true
-		// } else {
-		// 	return false
-		// }
-		return loc[1] && loc[1] === 'extra' //? true : false
+		return loc[1] && loc[1] === 'extra'
 	},
 })
 
 const markersExtra = graphql(MARKERS_EXTRA_QUERY, {
 	options: ({ NELat, NELng, SWLat, SWLng, location }) => {
-		// console.log(NELng)
 		const loc = location.pathname.split('/')
 		let query = ''
 		if (loc.length !== 2) {
@@ -51,28 +41,21 @@ const markersExtra = graphql(MARKERS_EXTRA_QUERY, {
 			query = 'schools'
 		}
 		return {
-			variables: { NELat, NELng, SWLat, SWLng, query },
-			// pollInterval: 60000,
+			variables: { NELat, NELng, SWLat, SWLng, query, regionId: localStorage.getItem('regionID') },
 		}
 	},
 	skip: ({ location }) => {
 		const loc = location.pathname.split('/')
-
-		// if (loc[1] && loc[1] === 'extra') {
-		// 	return true
-		// } else {
-		// 	return false
-		// }
-		return !(loc[1] && loc[1] === 'extra') //? true : false
+		if (localStorage.getItem('regionID') === -1) {
+			return true
+		}
+		return !(loc[1] && loc[1] === 'extra')
 	},
 })
 
 const createMarker = graphql(CREATE_MARKER_MUTATION, {
 	props: ({ ownProps, mutate }) => ({
 		create: ({ lat, lng }) => {
-			// console.log(values)
-			// console.log(lat, lng)
-
 			mutate({
 				variables: { lat: lat, lng: lng },
 				update: (proxy, { data: { createMarker } }) => {
@@ -100,17 +83,32 @@ const createMarker = graphql(CREATE_MARKER_MUTATION, {
 
 class MapContainer extends Component {
 	dblClick = latLng => {
-		// console.log('dblClick()')
-		// console.log(latLng.lat(), latLng.lng())
-		// console.log(this.props)
-
 		this.props.create({ lat: latLng.lat(), lng: latLng.lng() })
 	}
+	snglClick = latLng => {
+		const loc = this.props.location.pathname.split('/')
 
-	markerClick = marker => {}
+		if (loc.length === 2 && loc[1] === '') {
+			const marker = {
+				_id:
+					Math.random()
+						.toString(36)
+						.substring(2) + new Date().getTime().toString(36),
+				location: {
+					type: 'Point',
+					coordinates: [latLng.lng(), latLng.lat()],
+				},
+			}
+
+			this.props.newMarker(marker)
+		}
+	}
+
+	markerClick = marker => {
+		console.log(marker)
+	}
 
 	onIdle = bounds => {
-		// console.log('Call onIdle')
 		const NELat = bounds.getNorthEast().lat()
 		const NELng = bounds.getNorthEast().lng()
 		const SWLat = bounds.getSouthWest().lat()
@@ -125,8 +123,11 @@ class MapContainer extends Component {
 	}
 
 	render() {
-		const { data, location } = this.props
-		let image = 'default'
+		let allMarkers = []
+
+		const { data, location, markers, show } = this.props
+
+		let image = ''
 		const styles = reactCSS({
 			default: {
 				mapMontainer: {
@@ -136,32 +137,32 @@ class MapContainer extends Component {
 				},
 			},
 		})
-		// console.log(this.props)
-		const markers = (data && data.markersExtra) || (data && data.markers)
 		const loc = location.pathname.split('/')
-		// console.log(loc)
-		// console.log(loc.length)
 
-		if (loc.length === 2 && loc[1] === 'extra') {
-			image = 'schools'
-		} else {
-			image = loc[2]
+		if (!data.loading) {
+			if (loc.length === 2 && loc[1] === 'extra') {
+				image = 'schools'
+			} else {
+				image = loc[2]
+			}
+			allMarkers = data && data.markersExtra
+			if ((loc.length === 2 && loc[1] === '') || (loc.length === 2 && loc[1] === 'profile')) {
+				image = 'default'
+				allMarkers = [...markers, ...data.markers]
+			}
 		}
-		if (loc.length === 2 && loc[1] === '') {
-			image = 'default'
-		}
-
-		// console.log(image)
 
 		return (
 			<div style={styles.mapMontainer}>
 				<Fragment>
 					<GMap
-						markers={markers}
+						markers={allMarkers}
 						dblClick={this.dblClick}
+						snglClick={this.snglClick}
 						markerClick={this.markerClick}
 						onIdle={this.onIdle}
 						pic={image}
+						show={show}
 					/>
 					<Switch>
 						<Route path="/extra" component={Extra} />
@@ -174,31 +175,32 @@ class MapContainer extends Component {
 	}
 }
 
-// const UserWithData = () => (
-// 	<Query query={MARKERS_QUERY}>
-// 		{({ loading, data: { markers } }) => {
-// 			if (loading) return <span>loading....</span>
-// 			return <MapContainer me={me} />
-// 		}}
-// 	</Query>
-// )
-
 const mapStateToProps = state => {
 	const {
-		map: { NELat, NELng, SWLat, SWLng },
+		map: { NELat, NELng, SWLat, SWLng, markers, show },
 	} = state
-	return { NELat, NELng, SWLat, SWLng }
+	return { NELat, NELng, SWLat, SWLng, markers, show }
 }
 
 const mapDispatchToProps = dispatch => {
 	return {
-		// fetchAddress: (lat, lng, locale) => {
-		// dispatch(getAddress(lat, lng, locale))
-		// },
+		newMarker: marker => {
+			dispatch(addMarker(marker))
+		},
 		newBounds: bounds => {
 			dispatch(setBounds(bounds))
 		},
 	}
+}
+
+MapContainer.propTypes = {
+	create: PropTypes.func.isRequired,
+	location: PropTypes.object.isRequired,
+	newMarker: PropTypes.func.isRequired,
+	newBounds: PropTypes.func.isRequired,
+	data: PropTypes.object.isRequired,
+	markers: PropTypes.array.isRequired,
+	show: PropTypes.bool.isRequired,
 }
 
 export default compose(
@@ -217,20 +219,3 @@ export default compose(
 	createMarker,
 	pure
 )(MapContainer)
-
-// export default MapContainer
-
-// <Query query={MARKERS_QUERY}>
-// 					{({ loading, data: { markers } }) => {
-// 						if (loading) return <span>loading....</span>
-// 						return (
-// 							<Fragment>
-// 								<GMap markers={markers} dblClick={this.dblClick} markerClick={this.markerClick} onIdle={this.onIdle} />
-// 								<Switch>
-// 									<Route path="/extra" component={Extra} />
-// 									<Route path="/" exact strict component={MarkersIndex} />
-// 								</Switch>
-// 							</Fragment>
-// 						)
-// 					}}
-// 				</Query>

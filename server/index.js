@@ -1,16 +1,12 @@
 import express from 'express'
 
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express'
-// import { ApolloEngine } from 'apollo-engine'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 
 import { makeExecutableSchema } from 'graphql-tools'
 
 import mongoose from 'mongoose'
-
-// import { schema } from '../schema/buildSchema'
-// import { context } from '../middleware/context'
 
 import typeDefs from './src/schema'
 import resolvers from './src/resolvers'
@@ -23,10 +19,6 @@ const schema = makeExecutableSchema({
 	typeDefs,
 	resolvers,
 })
-
-// mongoose.connect('mongodb://localhost/test')
-
-// const Cat = mongoose.model('Cat', { name: String })
 
 const PORT = 3022
 
@@ -43,7 +35,6 @@ server.use(
 			schema,
 			context: {
 				...user,
-				// Cat,
 				Marker,
 				User,
 			},

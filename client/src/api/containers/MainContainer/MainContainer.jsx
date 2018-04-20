@@ -9,12 +9,12 @@ import { compose } from 'recompose'
 
 import NavigationBar from '../../../ui/dumb/Navigation.Bar/NavigationBar.jsx'
 import MapContainer from '../MapContainer/MapContainer'
-// import UserWithData from '../UserWithData/UserWithData'
 
 import { ME_QUERY } from '../../graphql/users/users.queries'
 import { UPSERT_USER_MUTATION } from '../../graphql/users/users.mutations'
 
 let options = {
+	allowedConnections: ['google-oauth2'],
 	auth: {
 		redirect: false,
 		sso: false,
@@ -27,10 +27,10 @@ let options = {
 	loginAfterSignup: false,
 	primaryColor: '#31324F',
 	languageDictionary: {
-		title: 'Gdeedem.Com',
+		title: 'Markers App',
 	},
 	theme: {
-		logo: '/137.png',
+		logo: '/logo.png',
 	},
 }
 
@@ -42,52 +42,33 @@ class MainContainer extends Component {
 	}
 
 	componentDidMount() {
-		// console.log(this.props)
-
 		if (moment(new Date().setTime(localStorage.getItem('expiresAt'))).isBefore(new Date())) {
-			// console.log('Expired')
-
 			localStorage.removeItem('expiresAt')
 			localStorage.removeItem('accessToken')
 			localStorage.removeItem('idToken')
-			// localStorage.removeItem('profile')
-
-			// localStorage.removeItem('userLat')
-			// localStorage.removeItem('userLng')
-
-			// this.props.client.resetStore()
-		} else {
-			// console.log('Not expired')
 		}
 
 		this.lock = new Auth0Lock('q7ghJIRemSuGPRIlVOz26JZBTU6HhrBs', 'none.eu.auth0.com', {
 			...options,
-			language: 'ru',
+			language: 'en',
 		})
 
 		this.lock.on('authenticated', authResult => {
-			// console.log(authResult)
-
 			this.lock.getUserInfo(authResult.accessToken, async (error, profile) => {
 				if (error) {
 					console.log(error)
 					return
 				}
-				// console.log(profile)
 
 				let expiresAt = JSON.stringify(authResult.expiresIn * 1000 + new Date().getTime())
 
 				localStorage.setItem('expiresAt', expiresAt)
 				localStorage.setItem('accessToken', authResult.accessToken)
 				localStorage.setItem('idToken', authResult.idToken)
-				// localStorage.setItem('profile', JSON.stringify(profile))
-
-				// console.log(this.props)
 
 				this.props
 					.mutate()
 					.then(({ data }) => {
-						// console.log('got data', data)
 						this.props.data.refetch()
 					})
 					.catch(error => {
@@ -112,15 +93,9 @@ class MainContainer extends Component {
 	}
 
 	handleLogout = () => {
-		// console.log('Main logout function')
-
-		// if (this.lock) {
-		//   this.lock.logout()
-		// }
 		localStorage.removeItem('expiresAt')
 		localStorage.removeItem('accessToken')
 		localStorage.removeItem('idToken')
-		// localStorage.removeItem('profile')
 
 		this.props.client.resetStore()
 	}
@@ -141,7 +116,6 @@ MainContainer.propTypes = {
 	client: PropTypes.object.isRequired,
 }
 
-// export default MainContainer
 const meQuery = graphql(ME_QUERY)
 const upsertUserMutation = graphql(UPSERT_USER_MUTATION)
 

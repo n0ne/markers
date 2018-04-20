@@ -3,29 +3,14 @@ import PropTypes from 'prop-types'
 
 import { NavDropdown, MenuItem, NavItem } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
-// import { Link } from 'react-router-dom'
 
 import UserAvatar from '../../dumb/User.Avatar/UserAvatar'
 import FaCogs from 'react-icons/lib/fa/cogs'
-// import FaArchive from 'react-icons/lib/fa/archive'
-// import FaTruck from 'react-icons/lib/fa/truck'
-// import FaEnvelope from 'react-icons/lib/fa/envelope'
 import FaSignOut from 'react-icons/lib/fa/sign-out'
 
-// import { pure, compose } from 'recompose'
-// import { injectIntl } from 'react-intl'
-
 class UserLoggedIn extends Component {
-	// constructor(props) {
-	//   super(props)
-	//
-	//   this.handleLogin = this.handleLogin.bind(this)
-	// }
-
 	handleLogout = e => {
 		e.preventDefault()
-
-		// console.log('test logout')
 
 		this.props.logout()
 	}
@@ -65,7 +50,3 @@ UserLoggedIn.propTypes = {
 }
 
 export default UserLoggedIn
-
-{
-	/* <UserAvatar user={user} /> */
-}

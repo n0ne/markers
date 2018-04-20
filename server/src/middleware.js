@@ -1,11 +1,7 @@
 import jwt from 'jsonwebtoken'
 
-// import { Meteor } from 'meteor/meteor'
-
 export async function context(headers) {
 	const authorization = headers['authorization']
-
-	// console.log(authorization)
 
 	const user = await getUser(authorization)
 
@@ -39,10 +35,6 @@ async function getUser(authorization) {
 
 	if (authorization && authorization.length > bearerLength) {
 		const token = authorization.slice(bearerLength)
-		// const pubKey = Meteor.settings.private.auth0PubKey
-
-		// console.log(token)
-		// console.log(pubKey)
 
 		const { ok, result } = await new Promise(resolve =>
 			jwt.verify(token, pubKey, { algorithm: 'RS256' }, (err, result) => {
@@ -66,7 +58,6 @@ async function getUser(authorization) {
 			}
 		} else {
 			console.error(result)
-			// return null
 		}
 	}
 

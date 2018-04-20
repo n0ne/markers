@@ -48,46 +48,20 @@ const GMap = compose(
 					this.props.onZoomChange(refs.map.getZoom())
 				},
 				mapIdle: () => {
-					// if (
-					// 	this.props.center.lat !== refs.map.getCenter().lat() ||
-					// 	this.props.center.lng !== refs.map.getCenter().lng()
-					// ) {
-					// this.props.setCenter({
-					// 	lat: refs.map.getCenter().lat(),
-					// 	lng: refs.map.getCenter().lng(),
-					// })
-					// }
-
-					if (this.props.onIdle) {
-						// console.log('Call mapIdle()')
-
-						this.props.onIdle(refs.map.getBounds())
-					}
-
 					this.props.setCenter({
 						lat: refs.map.getCenter().lat(),
 						lng: refs.map.getCenter().lng(),
 					})
-				},
-				onDoubleClick: event => {
-					const loc = this.props.location.pathname.split('/')
-					let isSearch = false
 
-					if (loc[2] && loc[2] === 'search') {
-						isSearch = true
+					if (this.props.onIdle) {
+						this.props.onIdle(refs.map.getBounds())
 					}
+				},
 
-					if (!isSearch) {
-						if (this.props.dblClick) {
-							this.props.dblClick(event.latLng)
-						}
-
-						// this.props.setCenter({
-						// 	lat: event.latLng.lat(),
-						// 	lng: event.latLng.lng(),
-						// })
-					} else {
-						// this.props.history.push(`/freights/search/${event.latLng.lat()},${event.latLng.lng()}/r10000`)
+				onMapClick: event => {
+					console.log('Map click!')
+					if (this.props.snglClick) {
+						this.props.snglClick(event.latLng)
 					}
 				},
 				onClucterClick: cluster => {
@@ -95,6 +69,14 @@ const GMap = compose(
 						lat: cluster.center_.lat(),
 						lng: cluster.center_.lng(),
 					})
+				},
+				onMarkerClick: marker => {
+					this.props.onZoomChange(18)
+					refs.map.panTo({
+						lat: marker.location.coordinates[1],
+						lng: marker.location.coordinates[0],
+					})
+					refs.map.panBy(parseInt(document.documentElement.clientWidth * 0.16, 10), 0)
 				},
 			})
 		},
@@ -160,22 +142,25 @@ const GMap = compose(
 				},
 			}}
 			onDblClick={props.onDoubleClick}
+			onClick={props.onMapClick}
 			onZoomChanged={props.onZoomChanged}
 			onIdle={_.debounce(props.mapIdle, 500)}
 		>
 			<MarkerClusterer noRedraw averageCenter enableRetinaIcons gridSize={60} onClick={props.onClucterClick}>
-				{props.markers.map(marker => (
-					<Marker
-						position={{
-							lat: marker.location.coordinates[1],
-							lng: marker.location.coordinates[0],
-						}}
-						key={marker._id}
-						_id={marker._id}
-						icon={`/${props.pic}.png`}
-						option={{ id: marker._id }}
-					/>
-				))}
+				{props.show &&
+					props.markers.map(marker => (
+						<Marker
+							position={{
+								lat: marker.location.coordinates[1],
+								lng: marker.location.coordinates[0],
+							}}
+							key={marker._id}
+							_id={marker._id}
+							icon={`/${props.pic}.png`}
+							option={{ id: marker._id }}
+							onClick={() => props.onMarkerClick(marker)}
+						/>
+					))}
 			</MarkerClusterer>
 		</GoogleMap>
 	)

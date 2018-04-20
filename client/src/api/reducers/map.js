@@ -1,4 +1,9 @@
-import { MAP_BOUNDS_WAS_CHANGED_CONSTANT } from '../constants/map.js'
+import {
+	MAP_BOUNDS_WAS_CHANGED_CONSTANT,
+	ADD_MARKER_CONSTANT,
+	REMOVE_ALL_MARKERS_CONSTANT,
+	CHANGE_MARKERS_VISABILITY_CONSTANT,
+} from '../constants/map.js'
 
 const initialState = {
 	NELat: 51,
@@ -9,10 +14,9 @@ const initialState = {
 	center: { lat: 51.4438, lng: 31.5784 },
 	minZoom: 8,
 	markers: [],
+	show: true,
 }
 export const mapReducer = (state = initialState, action) => {
-	// console.log(action.payload)
-
 	switch (action.type) {
 		case MAP_BOUNDS_WAS_CHANGED_CONSTANT:
 			return {
@@ -22,7 +26,21 @@ export const mapReducer = (state = initialState, action) => {
 				SWLat: action.payload.SWLat,
 				SWLng: action.payload.SWLng,
 			}
-			break
+		case ADD_MARKER_CONSTANT:
+			return {
+				...state,
+				markers: [...state.markers, action.payload],
+			}
+		case REMOVE_ALL_MARKERS_CONSTANT:
+			return {
+				...state,
+				markers: [],
+			}
+		case CHANGE_MARKERS_VISABILITY_CONSTANT:
+			return {
+				...state,
+				show: !state.show,
+			}
 		default:
 			return state
 	}
