@@ -1,4 +1,6 @@
 import React, { Component, Fragment } from 'react'
+import PropTypes from 'prop-types'
+
 import { graphql, withApollo } from 'react-apollo'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import { compose, pure, defaultProps } from 'recompose'
@@ -189,6 +191,16 @@ const mapDispatchToProps = dispatch => {
 			dispatch(setBounds(bounds))
 		},
 	}
+}
+
+MapContainer.propTypes = {
+	create: PropTypes.func.isRequired,
+	location: PropTypes.object.isRequired,
+	newMarker: PropTypes.func.isRequired,
+	newBounds: PropTypes.func.isRequired,
+	data: PropTypes.object.isRequired,
+	markers: PropTypes.array.isRequired,
+	show: PropTypes.bool.isRequired,
 }
 
 export default compose(

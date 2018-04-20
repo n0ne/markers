@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import { Navbar, Nav } from 'react-bootstrap'
 
@@ -27,6 +28,12 @@ const NavigationBar = ({ user, login, logout }) => {
 			</Navbar.Collapse>
 		</Navbar>
 	)
+}
+
+NavigationBar.propTypes = {
+	user: PropTypes.object.isRequired,
+	login: PropTypes.func.isRequired,
+	logout: PropTypes.func.isRequired,
 }
 
 export default NavigationBar

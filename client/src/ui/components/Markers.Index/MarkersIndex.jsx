@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
@@ -127,7 +127,12 @@ class MarkersIndex extends Component {
 	}
 }
 
-MarkersIndex.propTypes = {}
+MarkersIndex.propTypes = {
+	hide: PropTypes.func.isRequired,
+	markers: PropTypes.array.isRequired,
+	add: PropTypes.func.isRequired,
+	show: PropTypes.bool.isRequired,
+}
 
 const mapStateToProps = state => {
 	const {

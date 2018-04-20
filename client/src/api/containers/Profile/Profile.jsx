@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 
 import { Query } from 'react-apollo'
 
@@ -97,7 +97,9 @@ class Profile extends Component {
 	}
 }
 
-Profile.propTypes = {}
+Profile.propTypes = {
+	user: PropTypes.object.isRequired,
+}
 
 const ProfileWithData = () => (
 	<Query query={ME_QUERY}>

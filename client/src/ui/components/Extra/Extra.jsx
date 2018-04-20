@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import PropTypes from 'prop-types'
 
 import { Link } from 'react-router-dom'
 import { Row, Col } from 'react-bootstrap'
@@ -76,5 +77,7 @@ class Extra extends Component {
 	}
 }
 
-Extra.propTypes = {}
+Extra.propTypes = {
+	location: PropTypes.object.isRequired,
+}
 export default Extra
