@@ -2,47 +2,18 @@ import axios from 'axios'
 
 export default {
 	Query: {
-		markers: async (_, args, {
-			Marker,
-			user
-		}) => {
+		markers: async (_, args, { Marker, user }) => {
+			const { NELat, NELng, SWLat, SWLng } = args
 
-			const {
-				NELat,
-				NELng,
-				SWLat,
-				SWLng
-			} = args
-
-			const markers = await Marker.find({
-				location: {
-					$geoWithin: {
-						$box: [
-							[SWLng, SWLat],
-							[NELng, NELat]
-						]
-					}
-				}
-			})
-
+			const markers = await Marker.find({ location: { $geoWithin: { $box: [[SWLng, SWLat], [NELng, NELat]] } } })
 
 			return markers.map(marker => {
 				marker._id = marker._id.toString()
 				return marker
 			})
 		},
-		markersExtra: async (_, args, {
-			Marker,
-			user
-		}) => {
-			const {
-				NELat,
-				NELng,
-				SWLat,
-				SWLng,
-				query,
-				regionId
-			} = args
+		markersExtra: async (_, args, { Marker, user }) => {
+			const { NELat, NELng, SWLat, SWLng, query, regionId } = args
 			let markers = []
 
 			const queries = {
@@ -74,15 +45,10 @@ export default {
 			return markers
 		},
 
-		me: async (_, args, {
-			user,
-			User
-		}) => {
+		me: async (_, args, { user, User }) => {
 			if (!!user) {
 				const contextUser = user
-				const dbUser = await User.find({
-					email: contextUser.email
-				}).exec()
+				const dbUser = await User.find({ email: contextUser.email }).exec()
 				const me = dbUser[0]
 
 				me._id = me._id.toString()
@@ -94,21 +60,7 @@ export default {
 		},
 	},
 	Mutation: {
-		createMarker: async (_, {
-			lat,
-			lng
-		}, {
-			Marker
-		}) => { <<
-			<<
-			<< < HEAD
-				// console.log('Try to create marker')
-
-				===
-				===
-				= >>>
-				>>>
-				> eabdc617be781f21441fe4037acae7851a77cafb
+		createMarker: async (_, { lat, lng }, { Marker }) => {
 			const marker = {
 				location: {
 					type: 'Point',
@@ -122,12 +74,7 @@ export default {
 			return newMarker
 		},
 
-		addMarkers: async (_, {
-			lats,
-			lngs
-		}, {
-			Marker
-		}) => {
+		addMarkers: async (_, { lats, lngs }, { Marker }) => {
 			let markers = []
 
 			for (let index = 0; index < lats.length; index++) {
@@ -147,26 +94,12 @@ export default {
 			return markers
 			// return []
 		},
-		upsertUser: async (_, args, {
-			user,
-			User
-		}) => { <<
-			<<
-			<< < HEAD
-				// console.log('Try to upsert user!')
-
-				// console.log(user)
-
-				===
-				===
-				= >>>
-				>>>
-				> eabdc617be781f21441fe4037acae7851a77cafb
+		upsertUser: async (_, args, { user, User }) => {
 			if (user) {
 				const contextUser = user
-				const updatedUser = await User.findOneAndUpdate({
-						email: contextUser.email
-					}, {
+				const updatedUser = await User.findOneAndUpdate(
+					{ email: contextUser.email },
+					{
 						$set: {
 							family_name: contextUser.family_name,
 							gender: contextUser.gender,
@@ -175,10 +108,9 @@ export default {
 							picture: contextUser.picture,
 							sub: contextUser.sub,
 						},
-					}, {
-						new: true,
-						upsert: true
-					})
+					},
+					{ new: true, upsert: true }
+				)
 					.exec()
 					.then(user => {
 						user._id = user._id.toString()
