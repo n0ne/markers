@@ -12,6 +12,8 @@ What this app has:
 
 # Getting started
 
+* You need MongoDB installed on localhost
+
 * Install packages:
 
           yarn
