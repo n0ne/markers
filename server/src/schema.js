@@ -1,8 +1,4 @@
 export default `
-type Cat {
-  _id: String!
-  name: String!
-}
 
 type Location {
   type: String!,
@@ -26,16 +22,14 @@ type User {
 
 
 type Query {
-  allCats: [Cat!]!
   markers(NELat: Float!, NELng: Float!, SWLat: Float!, SWLng: Float!): [Marker]!
-  markersExtra(NELat: Float!, NELng: Float!, SWLat: Float!, SWLng: Float!, query: String!): [Marker]!
+  markersExtra(NELat: Float!, NELng: Float!, SWLat: Float!, SWLng: Float!, query: String!, regionId: Int!): [Marker]!
   me: User
 }
 
 type Mutation {
-  createCat(name: String!): Cat!
   createMarker(lat: Float!, lng: Float!): Marker
-  addMarkers(lats: [String]!, lngs: [String]!): [Marker]
+  addMarkers(lats: [Float]!, lngs: [Float]!): [Marker]
   upsertUser:  User
 }
 `

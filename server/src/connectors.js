@@ -22,7 +22,6 @@ const MarkerSchema = new Schema({
 	},
 })
 
-// MarkerSchema.index({ location: '2dsphere' })
 const Marker = mongoose.model('Marker', MarkerSchema)
 
 const userSchema = new Schema({

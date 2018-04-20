@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 // import PropTypes from 'prop-types'
 
-// import { compose } from 'recompose'
-// import { connect } from 'react-redux'
-// import { withRouter } from 'react-router-dom'
 import { Query } from 'react-apollo'
 
 import { Row, Col, Image } from 'react-bootstrap'
@@ -16,10 +13,6 @@ import BoxContainer from '../../../ui/dumb/Box.Container/BoxContainer'
 import { ME_QUERY } from '../../graphql/users/users.queries'
 
 class Profile extends Component {
-	constructor(props) {
-		super(props)
-	}
-
 	render() {
 		const styles = reactCSS({
 			default: {
@@ -34,9 +27,7 @@ class Profile extends Component {
 			},
 		})
 
-		// console.log(this.props)
-
-		const { email, family_name, gender, given_name, name, picture } = this.props.user
+		const { email, family_name, gender, given_name, picture } = this.props.user
 
 		return (
 			<div
@@ -51,23 +42,54 @@ class Profile extends Component {
 						<Col xs={2}>
 							<Image src={picture} circle style={{ width: '52px' }} />
 						</Col>
-						<Col xs={10}>First name: {given_name}</Col>
-						<Col xs={10}>Last name: {family_name}</Col>
+						<Col xs={10}>
+							<Row>
+								<Col xs={4}>
+									<strong>First name:</strong>
+								</Col>
+								<Col xs={8}>{given_name}</Col>
+							</Row>
+							<Row>
+								<Col xs={4}>
+									<strong>Last name:</strong>
+								</Col>
+								<Col xs={8}>{family_name}</Col>
+							</Row>
+						</Col>
+					</Row>
+
+					<hr />
+
+					<Row>
+						<Col xs={4}>
+							<strong>E-mail:</strong>
+						</Col>
+						<Col xs={8}>{email}</Col>
 					</Row>
 					<Row>
-						<Col xs={12}>E-mail: {email}</Col>
+						<Col xs={4}>
+							<strong>Gender:</strong>
+						</Col>
+						<Col xs={8}>{gender}</Col>
 					</Row>
 					<Row>
-						<Col xs={12}>Gender: {gender}</Col>
+						<Col xs={4}>
+							<strong>City:</strong>
+						</Col>
+						<Col xs={8}>{localStorage.getItem('city')}</Col>
 					</Row>
 					<Row>
-						<Col xs={12}>City: {localStorage.getItem('city')}</Col>
+						<Col xs={4}>
+							<strong>Country:</strong>
+						</Col>
+						<Col xs={8}>{localStorage.getItem('country_name')}</Col>
 					</Row>
+
 					<Row>
-						<Col xs={12}>Country: {localStorage.getItem('country_name')}</Col>
-					</Row>
-					<Row>
-						<Col xs={12}>Region ID: {localStorage.getItem('regionID')}</Col>
+						<Col xs={4}>
+							<strong>Region ID:</strong>
+						</Col>
+						<Col xs={8}>{localStorage.getItem('regionID')}</Col>
 					</Row>
 				</BoxContainer>
 			</div>
@@ -76,17 +98,6 @@ class Profile extends Component {
 }
 
 Profile.propTypes = {}
-
-// const mapStateToProps = state => {
-// 	const {
-// 		locale: { lang },
-// 	} = state
-// 	return {
-// 		currentLocale: lang,
-// 	}
-// }
-
-// export default compose(withRouter, connect(mapStateToProps, null))(Extra)
 
 const ProfileWithData = () => (
 	<Query query={ME_QUERY}>
@@ -98,23 +109,3 @@ const ProfileWithData = () => (
 )
 
 export default ProfileWithData
-
-// {/* <Query query={EXTRA_QUERY}>
-//                 {({ loading, data: { extra } }) => {
-//                         if (loading) return <span>loading....</span>
-//                         return (
-// 													<div
-// 														style={styles.mainDiv}
-// 														ref={div => {
-// 															this.myDiv = div
-// 														}}
-// 													>
-// 														<BoxHeader title="User profile" />
-// 														<BoxContainer>
-// 															<div>Profile</div>
-// 															<div>Profile</div>
-// 														</BoxContainer>
-// 													</div>
-// 												)
-//                 }}
-//         </Query> */}
