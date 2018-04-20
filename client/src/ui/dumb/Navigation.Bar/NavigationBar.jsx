@@ -31,7 +31,7 @@ const NavigationBar = ({ user, login, logout }) => {
 }
 
 NavigationBar.propTypes = {
-	user: PropTypes.object.isRequired,
+	user: PropTypes.object,
 	login: PropTypes.func.isRequired,
 	logout: PropTypes.func.isRequired,
 }
