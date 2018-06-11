@@ -21,7 +21,7 @@ function getRegionIDs() {
 
 const GMap = compose(
 	withProps({
-		googleMapURL: 'https://maps.googleapis.com/maps/api/js?v=3.31&key=AIzaSyCCZnQG53G0QjCxZwUNFpc7cUGJMOBia5s',
+		googleMapURL: 'https://maps.googleapis.com/maps/api/js?v=3.31&key=${YOU_NEED_YOUR_KEY_HERE}',
 		loadingElement: <div style={{ height: '100%' }}>Loading...</div>,
 		containerElement: <div style={{ height: '100%', position: 'relative' }} />,
 		mapElement: <div style={{ height: '100%' }} />,
